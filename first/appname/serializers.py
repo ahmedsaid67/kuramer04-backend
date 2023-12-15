@@ -198,8 +198,8 @@ class MushaflarSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         mushaf_kategori_id = validated_data.pop('mushaf_kategori_id')
-        mushaf_kategori = PersonelTuru.objects.get(id=mushaf_kategori_id)
-        return Persons.objects.create(personel_turu=mushaf_kategori, **validated_data)
+        mushaf_kategori = MushafKategori.objects.get(id=mushaf_kategori_id)
+        return Mushaflar.objects.create(mushaf_kategori=mushaf_kategori, **validated_data)
 
     def update(self, instance, validated_data):
         mushaf_kategori_id = validated_data.get('mushaf_kategori_id', instance.mushaf_kategori_id)
