@@ -316,3 +316,70 @@ class Mushaflar(models.Model):
     mushaf_kategori=models.ForeignKey(MushafKategori,on_delete=models.CASCADE,null=True, blank=True)
     durum = models.BooleanField(default=True)
     is_removed = models.BooleanField(default=False)
+
+
+
+## MUSHAF FARKLARI
+
+
+def kapakfoto_path_mushaffarklari(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f'mushaffarklari/kapakfoto/{filename}'
+
+def pdf_dosya_path_mushaffarklari(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+
+    return f'mushaffarklari/pdf_dosyalar/{filename}'
+class Mushaffarklari(models.Model):
+    baslik = models.TextField()
+    kapak_fotografi = models.ImageField(upload_to=kapakfoto_path_mushaffarklari, blank=True, null=True)
+    pdf_dosya = models.FileField(upload_to=pdf_dosya_path_mushaffarklari, blank=True, null=True)
+    durum = models.BooleanField(default=True)
+    is_removed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.baslik
+
+
+
+
+## KİTAP KATEGORİ
+
+
+def kapakfoto_path_kitapkategori(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f'kitapkategori/kapakfoto/{filename}'
+
+class KitapKategori(models.Model):
+    baslik = models.TextField()
+    kapak_fotografi = models.ImageField(upload_to=kapakfoto_path_kitapkategori, blank=True, null=True)
+    durum = models.BooleanField(default=True)
+    is_removed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.baslik
+
+
+# KİTAPLAR
+
+
+def kapakfoto_path_kitaplar(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f'kitaplar/kapakfoto/{filename}'
+
+
+class Kitap(models.Model):
+    ad=models.CharField(max_length=200)
+    yazar=models.CharField(max_length=200)
+    yayin_tarihi = models.DateField()
+    sayfa_sayisi=models.IntegerField(default=0)
+    isbn = models.CharField(max_length=50)
+    kapak_fotografi = models.ImageField(upload_to=kapakfoto_path_kitaplar, blank=True, null=True)
+    ozet=models.TextField()
+    kitap_kategori=models.ForeignKey(KitapKategori,on_delete=models.CASCADE,null=True, blank=True)
+    durum = models.BooleanField(default=True)
+    is_removed = models.BooleanField(default=False)
