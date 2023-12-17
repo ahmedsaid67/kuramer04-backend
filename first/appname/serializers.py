@@ -70,7 +70,7 @@ class PersonellerSerializer(serializers.ModelSerializer):
         instance.soyad = validated_data.get('soyad', instance.soyad)
         instance.unvan = validated_data.get('unvan', instance.unvan)
         instance.personel_turu = personel_turu
-        instance.img = validated_data.get('img', instance.img)
+        instance.img = validated_data.get('img', 'defaults/defaultprofilephoto.jpeg')
         instance.durum = validated_data.get('durum', instance.durum)
         instance.is_removed = validated_data.get('is_removed', instance.is_removed)
 
@@ -214,5 +214,68 @@ class MushaflarSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+# MÜSHAF FARKLARI
+
+from .models import Mushaffarklari
+
+
+class MushaffarklariSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mushaffarklari
+        fields = '__all__'
+
+
+# Kitap Kategori
+
+from .models import KitapKategori
+
+
+class KitapKategoriSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KitapKategori
+        fields = '__all__'
+
+
+
+# Kitaplar
+
+
+
+from .models import Kitap
+
+class KitaplarSerializer(serializers.ModelSerializer):
+    kitap_kategori = KitapKategoriSerializer(read_only=True)
+    kitap_kategori_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Kitap
+        fields = ['id', 'ad','yazar','yayin_tarihi','sayfa_sayisi','isbn','kapak_fotografi','ozet', 'kitap_kategori', 'kitap_kategori_id', 'durum', 'is_removed']
+
+    def create(self, validated_data):
+        kitap_kategori_id = validated_data.pop('kitap_kategori_id')
+        kitap_kategori = KitapKategori.objects.get(id=kitap_kategori_id)
+        return Kitap.objects.create(kitap_kategori=kitap_kategori, **validated_data)
+        return Kitap.objects.create(kitap_kategori=kitap_kategori, **validated_data)
+
+    def update(self, instance, validated_data):
+        kitap_kategori_id = validated_data.get('kitap_kategori_id', instance.kitap_kategori_id)
+        kitap_kategori = KitapKategori.objects.get(id=kitap_kategori_id)
+
+        instance.ad = validated_data.get('ad', instance.ad)
+        instance.yazar = validated_data.get('yazar', instance.yazar)
+        instance.yayin_tarihi = validated_data.get('yayin_tarihi', instance.yayin_tarihi)
+        instance.sayfa_sayisi = validated_data.get('sayfa_sayisi', instance.sayfa_sayisi)
+        instance.isbn = validated_data.get('isbn', instance.isbn)
+        instance.kapak_fotografi = validated_data.get('kapak_fotografi', instance.kapak_fotografi)
+        instance.ozet = validated_data.get('ozet', instance.ozet)
+        instance.kitap_kategori = kitap_kategori
+        instance.durum = validated_data.get('durum', instance.durum)
+        instance.is_removed = validated_data.get('is_removed', instance.is_removed)
+
+        instance.save()
+        return instance
+
 
 
