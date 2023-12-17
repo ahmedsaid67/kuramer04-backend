@@ -6,7 +6,8 @@ from .views import PersonelTuruViewSet, PersonellerViewSet, PersonelTuruListView
     BrosurlerViewSet,BultenlerViewSet,TemelkonularViewSet,\
     TemelkavramlarViewSet,YayinlarimizdanSecmelerViewSet,YaziliBasinViewSet,\
     GorselBasinViewSet,KamuoyuDuyurulariViewSet,MushafKategoriViewSet,\
-    MushafKategoriListView,MushaflarViewSet
+    MushafKategoriListView,MushaflarViewSet,MushaffarklariViewSet,KitapKategoriViewSet,\
+    KitapKategoriListView,KitaplarViewSet
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -48,6 +49,15 @@ router_mushafkategori.register(r'mushafkategori', MushafKategoriViewSet)
 
 router_mushaflar = DefaultRouter()
 router_mushaflar.register(r'mushaflar', MushaflarViewSet)
+
+router_mushaffarklari = DefaultRouter()
+router_mushaffarklari.register(r'mushaffarklari', MushaffarklariViewSet)
+
+router_kitapkategori = DefaultRouter()
+router_mushaffarklari.register(r'kitapkategori', KitapKategoriViewSet)
+
+router_kitaplar = DefaultRouter()
+router_mushaffarklari.register(r'kitaplar', KitaplarViewSet)
 
 
 
@@ -104,8 +114,18 @@ urlpatterns = [
     path('', include(router_mushafkategori.urls)),
     path('mushafkategori-list/', MushafKategoriListView.as_view(), name='mushafkategori-list'),
 
-    #msuhaflar
+    #mushaflar
     path('', include(router_mushaflar.urls)),
+
+    #mushaffarklari
+    path('', include(router_mushaffarklari.urls)),
+
+    #kitaplar
+    #kitap kategori
+    path('', include(router_kitapkategori.urls)),
+    path('kitapkategori-list/', KitapKategoriListView.as_view(), name='kitapkategori-list'),
+    #kitaplar
+    path('', include(router_kitaplar.urls)),
 
 
 
