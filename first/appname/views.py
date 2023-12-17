@@ -166,7 +166,7 @@ class PersonelTuruViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = PersonelTuru.objects.filter(status=True).order_by('-id')
+        active = PersonelTuru.objects.filter(status=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -182,7 +182,7 @@ from rest_framework.mixins import ListModelMixin
 from rest_framework.generics import GenericAPIView
 
 class PersonelTuruListView(ListModelMixin, GenericAPIView):
-    queryset = PersonelTuru.objects.filter(is_removed=False).order_by('-id')
+    queryset = PersonelTuru.objects.filter(is_removed=False,status=True).order_by('-id')
     serializer_class = PersonelTuruSerializer
 
     def get(self, request, *args, **kwargs):
@@ -195,9 +195,22 @@ class PersonelTuruListView(ListModelMixin, GenericAPIView):
 from .models import Persons
 from .serializers import PersonellerSerializer
 
+from django_filters import rest_framework as filters
+
+
+class PersonelFilter(filters.FilterSet):
+    kategori = filters.NumberFilter(field_name='personel_turu__id')  # URL'de kategori olarak geçecek
+
+    class Meta:
+        model = Persons
+        fields = ['kategori']
+
 class PersonellerViewSet(viewsets.ModelViewSet):
     queryset = Persons.objects.filter(is_removed=False).order_by('-id')
     serializer_class = PersonellerSerializer
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PersonelFilter
 
     @action(detail=False, methods=['post'])
     def bulk_soft_delete(self, request):
@@ -210,7 +223,7 @@ class PersonellerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = Persons.objects.filter(durum=True).order_by('-id')
+        active = Persons.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -241,7 +254,7 @@ class BrosurlerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = Brosurler.objects.filter(durum=True).order_by('-id')
+        active = Brosurler.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -273,7 +286,7 @@ class BultenlerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = Bultenler.objects.filter(durum=True).order_by('-id')
+        active = Bultenler.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -306,7 +319,7 @@ class TemelkonularViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = Temelkonular.objects.filter(durum=True).order_by('-id')
+        active = Temelkonular.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -335,7 +348,7 @@ class TemelkavramlarViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = Temelkavramlar.objects.filter(durum=True).order_by('-id')
+        active = Temelkavramlar.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -367,7 +380,7 @@ class YayinlarimizdanSecmelerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = YayinlarimizdanSecmeler.objects.filter(durum=True).order_by('-id')
+        active = YayinlarimizdanSecmeler.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -400,7 +413,7 @@ class YaziliBasinViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = YaziliBasin.objects.filter(durum=True).order_by('-id')
+        active = YaziliBasin.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -432,7 +445,7 @@ class GorselBasinViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = GorselBasin.objects.filter(durum=True).order_by('-id')
+        active = GorselBasin.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -462,7 +475,7 @@ class KamuoyuDuyurulariViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = KamuoyuDuyurulari.objects.filter(durum=True).order_by('-id')
+        active = KamuoyuDuyurulari.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -479,6 +492,8 @@ class KamuoyuDuyurulariViewSet(viewsets.ModelViewSet):
 from .models import MushafKategori
 from .serializers import MushafKategoriSerializer
 
+
+
 class MushafKategoriViewSet(viewsets.ModelViewSet):
     queryset = MushafKategori.objects.filter(is_removed=False).order_by('-id')
     serializer_class = MushafKategoriSerializer
@@ -494,7 +509,7 @@ class MushafKategoriViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = MushafKategori.objects.filter(durum=True).order_by('-id')
+        active = MushafKategori.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -505,7 +520,7 @@ class MushafKategoriViewSet(viewsets.ModelViewSet):
 
 
 class MushafKategoriListView(ListModelMixin, GenericAPIView):
-    queryset = MushafKategori.objects.filter(is_removed=False).order_by('-id')
+    queryset = MushafKategori.objects.filter(is_removed=False,durum=True).order_by('-id')
     serializer_class = MushafKategoriSerializer
 
     def get(self, request, *args, **kwargs):
@@ -520,9 +535,31 @@ class MushafKategoriListView(ListModelMixin, GenericAPIView):
 from .models import Mushaflar
 from .serializers import MushaflarSerializer
 
+from django_filters import rest_framework as filters
+
+
+class MushafFilter(filters.FilterSet):
+    kategori = filters.NumberFilter(field_name='mushaf_kategori__id')  # URL'de kategori olarak geçecek
+
+    class Meta:
+        model = Mushaflar
+        fields = ['kategori']
+
+    # tüm musafları mushafkategoriyi göre filtreleyebilioruz bu sayede.
+    # mushafkategorinin id sini istiyoruz o idye göre mushafkategoriye ulasıyoruz. ve mushaflarda mushaf_kategor alanı
+    # ulaşılan mushafkategor ile dolu olan mushafları cekıyoruz. ve pgainationda mevcut.
+    # http://127.0.0.1:8000/api/appname/mushaflar/?kategori=1  ---> bir örnek.
+    # buradaki 1 , mushafkategori nesnenisin id sini temsil eder.
+    # yani id 'si 1 olan mushaf kategorisi ile ilişkili tüm mushafları getirir.
+
+
+
 class MushaflarViewSet(viewsets.ModelViewSet):
     queryset = Mushaflar.objects.filter(is_removed=False).order_by('-id')
     serializer_class = MushaflarSerializer
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = MushafFilter
 
     @action(detail=False, methods=['post'])
     def bulk_soft_delete(self, request):
@@ -535,7 +572,121 @@ class MushaflarViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_active(self, request):
-        active = Mushaflar.objects.filter(durum=True).order_by('-id')
+        active = Mushaflar.objects.filter(durum=True,is_removed=False).order_by('-id')
+        page = self.paginate_queryset(active)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(active, many=True)
+        return Response(serializer.data)
+
+
+
+# MÜSHAFLAR
+
+from .models import Mushaffarklari
+from .serializers import MushaffarklariSerializer
+
+class MushaffarklariViewSet(viewsets.ModelViewSet):
+    queryset = Mushaffarklari.objects.filter(is_removed=False).order_by('-id')
+    serializer_class = MushaffarklariSerializer
+
+    @action(detail=False, methods=['post'])
+    def bulk_soft_delete(self, request):
+        ids = request.data.get('ids', [])
+        # Güvenli bir şekilde int listesi oluştur
+        ids = [int(id) for id in ids if id.isdigit()]
+        # Belirtilen ID'lere sahip nesneleri soft delete işlemi ile güncelle
+        Mushaffarklari.objects.filter(id__in=ids).update(is_removed=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['get'])
+    def get_active(self, request):
+        active = Mushaffarklari.objects.filter(durum=True,is_removed=False).order_by('-id')
+        page = self.paginate_queryset(active)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(active, many=True)
+        return Response(serializer.data)
+
+
+
+
+
+# KitapKategori
+
+from .models import KitapKategori
+from .serializers import KitapKategoriSerializer
+
+class KitapKategoriViewSet(viewsets.ModelViewSet):
+    queryset = KitapKategori.objects.filter(is_removed=False).order_by('-id')
+    serializer_class = KitapKategoriSerializer
+
+    @action(detail=False, methods=['post'])
+    def bulk_soft_delete(self, request):
+        ids = request.data.get('ids', [])
+        # Güvenli bir şekilde int listesi oluştur
+        ids = [int(id) for id in ids if id.isdigit()]
+        # Belirtilen ID'lere sahip nesneleri soft delete işlemi ile güncelle
+        KitapKategori.objects.filter(id__in=ids).update(is_removed=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['get'])
+    def get_active(self, request):
+        active = KitapKategori.objects.filter(durum=True,is_removed=False).order_by('-id')
+
+        serializer = self.get_serializer(active, many=True)
+        return Response(serializer.data)
+
+    ## burası zaten ön yüz için yazılmış silinmöiş ve aktif olmayan nesneleri döndürmemeyi sağlıyordu.
+    # biz ek olarak diğerlerinden ayrı burada paginations'u kaldırdık. çünkü kullanıcı arayüzü tarafında
+    # kategorinin tamamının listelenmesini istioruz.
+
+class KitapKategoriListView(ListModelMixin, GenericAPIView):
+    queryset = KitapKategori.objects.filter(is_removed=False,durum=True).order_by('-id')
+    serializer_class = KitapKategoriSerializer
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+# KitapKategori
+
+from .models import Kitap
+from .serializers import KitaplarSerializer
+from django_filters import rest_framework as filters
+
+
+class KitapFilter(filters.FilterSet):
+    kategori = filters.NumberFilter(field_name='kitap_kategori__id')  # URL'de kategori olarak geçecek
+
+    class Meta:
+        model = Kitap
+        fields = ['kategori']
+class KitaplarViewSet(viewsets.ModelViewSet):
+    queryset = Kitap.objects.filter(is_removed=False).order_by('-id')
+    serializer_class = KitaplarSerializer
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = KitapFilter
+
+    @action(detail=False, methods=['post'])
+    def bulk_soft_delete(self, request):
+        ids = request.data.get('ids', [])
+        # Güvenli bir şekilde int listesi oluştur
+        ids = [int(id) for id in ids if id.isdigit()]
+        # Belirtilen ID'lere sahip nesneleri soft delete işlemi ile güncelle
+        Kitap.objects.filter(id__in=ids).update(is_removed=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['get'])
+    def get_active(self, request):
+        active = Kitap.objects.filter(durum=True,is_removed=False).order_by('-id')
         page = self.paginate_queryset(active)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
