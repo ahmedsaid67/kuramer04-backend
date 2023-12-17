@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Slider,Menu,MenuItem,PersonelTuru,Persons,Brosurler,Bultenler,Temelkonular,\
     Temelkavramlar,YayinlarimizdanSecmeler,YaziliBasin,GorselBasin,\
-    KamuoyuDuyurulari,MushafKategori,Mushaflar
+    KamuoyuDuyurulari,MushafKategori,Mushaflar,Mushaffarklari,KitapKategori,Kitap
 
 
 admin.site.register(Slider)
@@ -19,3 +19,6 @@ admin.site.register(GorselBasin)
 admin.site.register(KamuoyuDuyurulari)
 admin.site.register(MushafKategori)
 admin.site.register(Mushaflar)
+admin.site.register(Mushaffarklari)
+admin.site.register(KitapKategori)
+admin.site.register(Kitap)
