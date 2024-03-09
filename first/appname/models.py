@@ -267,6 +267,11 @@ class GorselBasin(models.Model):
 
 ### KAMUOYU DUYURULARI
 
+def pdf_dosya_path_kamuoyuduyurulari(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f'kamuoyuduyurulari/pdf_dosyalar/{filename}'
+
 
 def kapakfoto_path_kamuoyuduyurulari(instance, filename):
     ext = filename.split('.')[-1]
@@ -280,7 +285,7 @@ class KamuoyuDuyurulari(models.Model):
     kapak_fotografi = models.ImageField(upload_to=kapakfoto_path_kamuoyuduyurulari, blank=True, null=True)
     tarih = models.DateField()
     durum = models.BooleanField(default=True)
-    icerik=models.TextField()
+    pdf_dosya = models.FileField(upload_to=pdf_dosya_path_kamuoyuduyurulari, blank=True, null=True)
     is_removed = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -632,6 +637,12 @@ class Calistaylar(models.Model):
 
 # EĞİTİMLER
 
+
+def pdf_dosya_path_egitimler(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f'egitimler/pdf_dosyalar/{filename}'
+
 def kapakfoto_path_egitimler(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{uuid.uuid4()}.{ext}"
@@ -645,7 +656,7 @@ class Egitimler(models.Model):
     tarih = models.DateTimeField()
     egitmen = models.CharField(max_length=200)
     kapak_fotografi = models.ImageField(upload_to=kapakfoto_path_egitimler, blank=True, null=True)
-    icerik = models.TextField()
+    pdf_dosya = models.FileField(upload_to=pdf_dosya_path_egitimler, blank=True, null=True)
     album = models.ForeignKey(FotoGaleri, on_delete=models.CASCADE, null=True, blank=True)
     yayin = models.ForeignKey(VideoGaleri01, on_delete=models.CASCADE, null=True, blank=True)
     durum = models.BooleanField(default=True)
@@ -698,13 +709,18 @@ def kapakfoto_path_arastirmalar(instance, filename):
     filename = f"{uuid.uuid4()}.{ext}"
     return f'arastirmalar/kapakfoto/{filename}'
 
+def pdf_dosya_path_arastirmalar(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f'arastirmalar/pdf_dosyalar/{filename}'
+
 
 
 class Arastirmalar(models.Model):
     baslik = models.CharField(max_length=200)
     slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
     kapak_fotografi = models.ImageField(upload_to=kapakfoto_path_egitimler, blank=True, null=True)
-    icerik = models.TextField()
+    pdf_dosya = models.FileField(upload_to=pdf_dosya_path_arastirmalar, blank=True, null=True)
     album = models.ForeignKey(FotoGaleri, on_delete=models.CASCADE, null=True, blank=True)
     yayin = models.ForeignKey(VideoGaleri01, on_delete=models.CASCADE, null=True, blank=True)
     durum = models.BooleanField(default=True)
