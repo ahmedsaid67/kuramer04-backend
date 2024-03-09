@@ -556,7 +556,7 @@ class EgitimlerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Egitimler
-        fields = ['id','baslik',"tarih","egitmen",'kapak_fotografi',"icerik","slug", 'album', 'album_id',"yayin","yayin_id", 'durum', 'is_removed']
+        fields = ['id','baslik',"tarih","egitmen",'kapak_fotografi',"pdf_dosya","slug", 'album', 'album_id',"yayin","yayin_id", 'durum', 'is_removed']
 
     def create(self, validated_data):
 
@@ -606,7 +606,7 @@ class EgitimlerSerializer(serializers.ModelSerializer):
         instance.tarih = validated_data.get('tarih', instance.tarih)
         instance.egitmen = validated_data.get('egitmen', instance.egitmen)
         instance.kapak_fotografi = validated_data.get('kapak_fotografi', instance.kapak_fotografi)
-        instance.icerik = validated_data.get('icerik', instance.icerik)
+        instance.pdf_dosya = validated_data.get('pdf_dosya', instance.pdf_dosya)
         instance.durum = validated_data.get('durum', instance.durum)
         instance.is_removed = validated_data.get('is_removed', instance.is_removed)
 
@@ -700,7 +700,7 @@ class ArastirmalarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Arastirmalar
-        fields = ['id','baslik','kapak_fotografi',"icerik","slug", 'album', 'album_id',"yayin","yayin_id", 'durum', 'is_removed']
+        fields = ['id','baslik','kapak_fotografi',"pdf_dosya","slug", 'album', 'album_id',"yayin","yayin_id", 'durum', 'is_removed']
 
     def create(self, validated_data):
 
@@ -748,7 +748,7 @@ class ArastirmalarSerializer(serializers.ModelSerializer):
         # Diğer alanların güncellenmesi
         instance.baslik = validated_data.get('baslik', instance.baslik)
         instance.kapak_fotografi = validated_data.get('kapak_fotografi', instance.kapak_fotografi)
-        instance.icerik = validated_data.get('icerik', instance.icerik)
+        instance.pdf_dosya = validated_data.get('pdf_dosya', instance.pdf_dosya)
         instance.durum = validated_data.get('durum', instance.durum)
         instance.is_removed = validated_data.get('is_removed', instance.is_removed)
 
